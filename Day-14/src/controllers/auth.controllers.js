@@ -32,7 +32,7 @@ async function register(req, res) {
     profileImage,
   });
 
-  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+  const token = jwt.sign({ id: user._id ,username:user.username}, process.env.JWT_SECRET, {
     expiresIn: "1d",
   });
 
@@ -71,7 +71,7 @@ async function login(req, res) {
     return res.status(409).json({ message: "password is incorrect" });
   }
 
-  const token = jwt.sign({ id: isUser._id }, process.env.JWT_SECRET);
+  const token = jwt.sign({ id: isUser._id , username:isUser.username }, process.env.JWT_SECRET);
 
   res.cookie("token", token);
 
