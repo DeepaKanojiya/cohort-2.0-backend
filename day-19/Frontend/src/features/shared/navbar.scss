@@ -1,0 +1,38 @@
+.navbar{
+    width:100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding-inline: 1rem;
+    padding-block: 0.5rem;
+
+    .nav{
+        width: 50%;
+        
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+
+
+      p{
+        font-size: 2rem;
+      }
+
+      .nav-button{
+         outline: none;
+         border: none;
+         padding-inline: 2rem;
+         padding-block: 0.7rem;
+         border-radius: 1rem;
+         background-color: rgb(239, 37, 37);
+         color: #f5f5f5 ;
+         cursor: pointer;
+
+         &:active{
+            scale: 0.95;
+         }
+      }
+    }
+    
+}
