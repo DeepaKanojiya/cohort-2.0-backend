@@ -9,6 +9,7 @@ const imagekit = new ImageKit({
 
 async function createPostController(req, res) {
   const { caption } = req.body;
+  const decoded = req.user;
 
   const file = await imagekit.files.upload({
     file: await toFile(Buffer.from(req.file.buffer), "file"),
@@ -82,6 +83,24 @@ async function likePostController(req, res) {
   res.status(200).json({ message: "Post liked successfully", like });
 }
 
+async function unlikePostController(req, res) {
+  const username = req.user.username;
+  const postId = req.params.postId;
+
+  const isLiked = await likeModel.findOne({
+    post: postId,
+    user: username,
+  });
+
+  if (!isLiked) {
+    return res.status(400).json({ message: "post didn't like" });
+  }
+
+  await likeModel.findByIdAndDelete({ _id: isLiked._id });
+
+  return res.status(200).json({ message: "post unlike successfully" });
+}
+
 async function getFeedController(req, res) {
   const user = req.user;
   const posts = await Promise.all(
@@ -99,10 +118,12 @@ async function getFeedController(req, res) {
 
   res.status(200).json({ message: "all post fetched successfully", posts });
 }
+
 module.exports = {
   createPostController,
   getPostController,
   getPostDetailsController,
   likePostController,
   getFeedController,
+  unlikePostController,
 };

@@ -14,6 +14,10 @@ postRouter.get('/details/:postId',identifyer,postControllers.getPostDetailsContr
 
 postRouter.post('/like/:postId',identifyer,postControllers.likePostController)
 
+postRouter.post('/unlike/:postId',identifyer,postControllers.unlikePostController)
+
+
+
 postRouter.get('/feed',identifyer,postControllers.getFeedController)
 
 
