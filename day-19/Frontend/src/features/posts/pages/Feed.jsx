@@ -5,12 +5,8 @@ import { usePosts } from "../hooks/usePosts";
 import NavBar from "../../shared/components/NavBar";
 
 function Feed() {
-  const { feed, handleGetFeed, loading } = usePosts();
+  const { feed, handleGetFeed, loading, handleLike, handleUnlike } = usePosts();
   console.log(feed);
-
-  useEffect(() => {
-    handleGetFeed();
-  }, []);
 
   if (loading || !feed) {
     return (
@@ -27,7 +23,15 @@ function Feed() {
         <div className="feed-page">
           <div className="posts">
             {feed.map((posts, index) => {
-              return <Post key={index} user={posts.user} post={posts} />;
+              return (
+                <Post
+                  key={index}
+                  user={posts.user}
+                  post={posts}
+                  handleLike={handleLike}
+                  handleUnlike={handleUnlike}
+                />
+              );
             })}
           </div>
         </div>
