@@ -1,0 +1,52 @@
+.expression-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 24px;
+  font-family: Arial, sans-serif;
+  background: #f4f6fb;
+  color: #222;
+}
+
+.camera {
+  width: 100%;
+  max-width: 500px;
+  border-radius: 16px;
+  background: #111;
+}
+
+.expression-card {
+  width: min(100%, 450px);
+  padding: 24px;
+  text-align: center;
+  border-radius: 16px;
+  background: white;
+  box-shadow: 0 4px 20px #00000012;
+}
+
+.emoji {
+  font-size: 76px;
+}
+
+.error {
+  color: #c62828;
+  overflow-wrap: anywhere;
+}
+
+.expression-page button {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  background: #2563eb;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.expression-page button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
