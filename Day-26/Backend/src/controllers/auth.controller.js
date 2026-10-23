@@ -46,20 +46,15 @@ async function RegisterController(req, res) {
 }
 
 async function LoginController(req, res) {
-  const { username, email, password } = req.body;
+  const { username, password } = req.body;
 
-  const isUser = await userModel
-    .findOne({
-      $or: [{ email }, { username }],
-    })
-    .select("+password");
+  const isUser = await userModel.findOne({ username }).select("+password");
 
   if (!isUser) {
     return res.status(404).json({ message: "User not Found" });
   }
 
   const isPasswordMatch = await bcrypt.compare(password, isUser.password);
-
   if (!isPasswordMatch) {
     return res.status(409).json({ message: "Invalid Crenditals" });
   }
