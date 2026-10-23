@@ -1,17 +1,18 @@
 const userModel = require("./../models/users.model");
-const blackListModel = require('./../models/blacklist.model')
+const blackListModel = require("./../models/blacklist.model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const redis = require("./../config/cache");
 
 async function RegisterController(req, res) {
   const { username, email, password } = req.body;
-  console.log(username, email, password)
+  console.log(username, email, password);
 
   const isUserAlreadyExists = await userModel.findOne({
     $or: [{ email }, { username }],
   });
 
-  console.log(isUserAlreadyExists)
+  console.log(isUserAlreadyExists);
 
   if (isUserAlreadyExists) {
     return res
@@ -93,21 +94,19 @@ async function GetMeController(req, res) {
     .json({ message: "User Details fetched Successfully", userDetails });
 }
 
-async function LogoutController(req,res){
-   const token = req.cookies.token;
+async function LogoutController(req, res) {
+  const token = req.cookies.token;
 
-    res.clearCookie(token)
+  res.clearCookie(token);
 
+  redis.set(token, Date.now().toString(), "EX", 60 * 60);
 
-    const balcklist = await blackListModel.create({token})
-
-    res.status(200).json({message:"token blacklisted successfully"})
-
+  res.status(200).json({ message: "token blacklisted successfully" });
 }
 
 module.exports = {
   RegisterController,
   LoginController,
   GetMeController,
-  LogoutController
+  LogoutController,
 };
