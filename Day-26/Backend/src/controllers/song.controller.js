@@ -9,17 +9,18 @@ async function songUploadController(req, res) {
 
   const tags = id3.read(songBuffer);
 
-  const songFile = await storageService.uploadFile({
-    buffer: songBuffer,
-    fileName: tags.title + ".mp3",
-    folder: "cohort-2/modify/songs",
-  });
-
-  const posterFile = await storageService.uploadFile({
-    buffer: tags.image.imageBuffer,
-    fileName: tags.title + ".jpeg",
-    folder: "cohort-2/modify/posts",
-  });
+  const [posterFile, songFile] = await Promise.all([
+      storageService.uploadFile({
+      buffer: tags.image.imageBuffer,
+      filename: tags.title + ".jpeg",
+      folder: "cohort-2/modify/posts",
+    }),
+    storageService.uploadFile({
+      buffer: songBuffer,
+      filename: tags.title + ".mp3",
+      folder: "cohort-2/modify/songs",
+    }),
+  ]);
 
   const song = await songModel.create({
     url: songFile.url,
@@ -28,9 +29,20 @@ async function songUploadController(req, res) {
     mood,
   });
 
-  res.status(200).json({ message: "song created successfully", song });
+  res.status(200).json({ message: "Song created successfully", song });
+}
+
+async function getSongController(req, res) {
+  const { mood } = req.query;
+
+  const song = await songModel.findOne({
+    mood,
+  });
+
+  res.status(200).json({ message: "song fetched successfully", song });
 }
 
 module.exports = {
   songUploadController,
+  getSongController,
 };
