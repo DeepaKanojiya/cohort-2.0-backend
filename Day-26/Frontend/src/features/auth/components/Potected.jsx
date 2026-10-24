@@ -1,14 +1,15 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 
 function Potected({ children }) {
   const { user, loading } = useAuth();
-  const navigate = useNavigate();
 
-  if (!loading && !user) {
-    navigate("/login");
+  if (loading) {
+    return <main aria-live="polite">Checking your session...</main>;
   }
+
+  if (!user) return <Navigate to="/login" replace />;
 
   return children;
 }

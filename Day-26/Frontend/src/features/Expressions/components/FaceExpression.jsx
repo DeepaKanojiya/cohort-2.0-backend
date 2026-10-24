@@ -6,6 +6,7 @@ import {
   stopCamera,
   closeFaceDetection,
 } from "../utils/faceDetection";
+import { useSong } from "../../home/hooks/useSong";
 
 import "../style/faceExpression.scss";
 
@@ -14,6 +15,7 @@ export default function Expression() {
   const [expression, setExpression] = useState("");
   const [error, setError] = useState("");
   const [ready, setReady] = useState(false);
+  const { loading: songLoading, handleGetSong } = useSong();
 
   useEffect(() => {
     let active = true;
@@ -46,11 +48,22 @@ export default function Expression() {
     };
   }, []);
 
-  function handleDetect() {
+  async function handleDetect() {
     if (!ready || !videoRef.current) return;
 
     setError("");
-    setExpression(detectExpression(videoRef.current));
+    const detectedExpression = detectExpression(videoRef.current);
+    setExpression(detectedExpression);
+
+    const mood = detectedExpression.toLowerCase();
+    if (!["happy", "sad", "surprised"].includes(mood)) return;
+
+    try {
+      await handleGetSong({ mood });
+    } catch (err) {
+      console.error(`Unable to load a ${mood} song.`, err);
+      setError(err.message || `Unable to load a ${mood} song.`);
+    }
   }
 
   return (
@@ -59,8 +72,12 @@ export default function Expression() {
 
       <video ref={videoRef} autoPlay muted playsInline className="camera" />
 
-      <button onClick={handleDetect} disabled={!ready}>
-        {ready ? "Detect Expression" : "Starting Camera..."}
+      <button onClick={handleDetect} disabled={!ready || songLoading}>
+        {!ready
+          ? "Starting Camera..."
+          : songLoading
+            ? "Loading mood song..."
+            : "Detect Expression"}
       </button>
 
       {error && <p className="error">{error}</p>}

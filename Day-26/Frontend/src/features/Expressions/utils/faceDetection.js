@@ -56,16 +56,16 @@ export function detectExpression(video) {
   const eyesWide = ((scores.eyeWideLeft || 0) + (scores.eyeWideRight || 0)) / 2;
   const browsUp = scores.browInnerUp || 0;
 
-  if (smile > 0.4) {
-    return "😊 Smiling";
-  }
-
   if (jawOpen > 0.25 && (eyesWide > 0.15 || browsUp > 0.15)) {
-    return "😮 Surprised";
+    return "surprised";
   }
 
-  if (frown > 0.15) {
-    return "😢 Sad";
+  if (smile > 0.4) {
+    return "happy";
+  }
+
+  if (frown > 0.015) {
+    return "sad";
   }
 
   return "😐 Neutral";
